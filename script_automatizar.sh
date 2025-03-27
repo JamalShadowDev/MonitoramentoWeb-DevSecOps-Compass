@@ -1,19 +1,19 @@
 #!/bin/bash
 
 # Atualiza a lista de pacotes e instala atualizações disponíveis
-sudo apt-get update -y
-sudo apt-get upgrade -y
+sudo apt-get update -y && sudo apt-get upgrade -y
 
 # Instala pacotes necessários: Nginx (servidor web), Vim (editor de texto) e UFW (firewall)
-sudo apt-get install -y nginx vim ufw
+sudo apt-get install -y nginx vim ufw curl
 
-# Inicia o serviço do Nginx e o habilita para iniciar automaticamente no boot
-sudo systemctl start nginx
-sudo systemctl enable nginx
+# Inicia o serviço do Nginx e habilita para iniciar automaticamente no boot
+sudo systemctl enable --now nginx
 
-# Ativa o firewall UFW e permite conexões HTTP para o Nginx
-sudo ufw enable
-ufw allow 'nginx HTTP'
+# Configuração do Firewall (UFW)
+sudo ufw allow 22/tcp         # Permite SSH para evitar perda de conexão
+sudo ufw allow 80             # Permite tráfego HTTP (porta 80)
+sudo ufw allow 443            # Permite tráfego HTTPS (caso use SSL)
+sudo ufw --force enable       # Ativa o firewall sem pedir confirmação'
 
 # Diretório e arquivo do serviço systemd
 SYSTEMD_DIR="/etc/systemd/system"
@@ -40,7 +40,7 @@ URL="http://localhost"  # URL do servidor a ser monitorado
 LOG_DIR="/var/log/monitoramento_nginx"  # Diretório para armazenar os logs
 LOG_FILE="$LOG_DIR/status.log"  # Arquivo de log onde os eventos serão registrados
 SERVICE="nginx"  # Nome do serviço a ser monitorado
-DISCORD_WH="COLOQUE_AQUI_O_LINK_DO_WEBHOOK"  # Webhook do Discord para alertas
+DISCORD_WH="https://discord.com/api/webhooks/1354699626762076343/QQO0mqB9zjpyoPZgc_7-UNs3S6y1ZeR7pC0-wtBpD7JwL4KkCCDZpwCxU0oafIoZysoj"  # Webhook do Discord para alertas
 CONT=0  # Variável de controle para evitar notificações repetidas
 
 # Definição das mensagens enviadas ao Discord
@@ -62,7 +62,10 @@ send_discord_message() {
 }
 
 # Garante que o diretório de logs exista
-sudo mkdir -p "$LOG_DIR"
+mkdir -p "$LOG_DIR"
+chmod +x "$LOG_DIR"
+mkdir -p "$LOG_FILE"
+chmod +x "$LOG_FILE"
 
 # Aguarda um tempo inicial antes de iniciar o monitoramento
 sleep 10
@@ -115,25 +118,132 @@ while true; do
 done
 EOF
 
+sleep 2
+
+# Define a página HTML para o site
+SITE_HTML="/var/www/html/index.nginx-debian.html"
+
+# Criação do conteúdo HTML para exibição no servidor
+cat << EOF | sudo tee "$SITE_HTML" > /dev/null
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto DevSecOps - Marcos Moreira</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #005792;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #005792;
+        }
+        ul {
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+            margin-top: 20px;
+        }
+        a {
+            color: #005792;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Projeto DevSecOps - Configuração de Servidor Web</h1>
+    </header>
+    <div class="container">
+        <h2>Sobre o Projeto</h2>
+        <p>Este projeto tem como objetivo praticar a configuração de servidores web e automação no ambiente Linux e AWS. A proposta é implementar um servidor Nginx em uma instância EC2, garantindo monitoramento contínuo e notificações em caso de falhas.</p>
+        <h2>Etapas do Projeto</h2>
+        <h3>1. Configuração do Ambiente</h3>
+        <ul>
+            <li>Criar uma VPC na AWS com 2 sub-redes públicas e 2 privadas.</li>
+            <li>Configurar uma instância EC2 com Ubuntu ou Amazon Linux.</li>
+            <li>Associar um Security Group permitindo tráfego HTTP e SSH.</li>
+        </ul>
+
+        <h3>2. Configuração do Servidor Web</h3>
+        <ul>
+            <li>Instalar e configurar o Nginx na instância EC2.</li>
+            <li>Criar uma página HTML para exibição no servidor.</li>
+        </ul>
+
+        <h3>3. Monitoramento e Notificações</h3>
+        <ul>
+            <li>Criar um script para verificar a disponibilidade do site a cada 1 minuto.</li>
+            <li>Registrar logs da execução do script.</li>
+            <li>Enviar notificações para Discord, Telegram ou Slack em caso de falhas.</li>
+        </ul>
+        <h3>4. Testes e Documentação</h3>
+        <ul>
+            <li>Testar o ambiente e validar a configuração.</li>
+            <li>Documentar o processo e disponibilizar no GitHub.</li>
+        </ul>
+
+        <h2>Mais Informações</h2>
+        <p>A documentação completa esta disponível no meu repositório do GitHub. <br> Acesse: <a href="https://github.com/hmindiano/MonitoramentoWeb-DevSecOps-Compass/" target="_blank">GitHub Marcos Moreira</a></p>
+    </div>
+    <footer>
+        <p>Desenvolvido por Marcos Moreira | Estudante de ADS - Fatec Mogi Mirim | Projeto para estágio Compass.UOL</p>
+    </footer>
+</body>
+</html>
+EOF
+
+sleep 2
+
 # Define permissões de execução para o script de monitoramento
 sudo chmod +x "$SCRIPT_FILE"
 
 # Criação do serviço systemd para monitoramento do Nginx
 cat << EOF | sudo tee "$SYSTEMD_FILE" > /dev/null
 [Unit]
+# Descrição do serviço: Define o objetivo do serviço de monitoramento do nginx
 Description=Monitoramento do serviço nginx
+
+# Garante que o serviço só inicie após a rede estar disponível
 After=network.target
 
 [Service]
+# Caminho para o script de monitoramento que será executado
 ExecStart=/usr/bin/monitoramento_nginx/site_onoff.sh
+
+# Define que o serviço deve ser reiniciado automaticamente caso pare
 Restart=always
-RestartSec=5
-User=nobody
-Group=nogroup
-StandardOutput=append:/var/log/monitoramento_nginx/status.log
-StandardError=append:/var/log/monitoramento_nginx/status.log
+
+# Define que a saída padrão será registrada no journal do sistema
+StandardOutput=journal
+
+# Define que os erros do serviço serão registrados no journal do sistema
+StandardError=journal
 
 [Install]
+# Garante que o serviço será iniciado no modo multiusuário, o que é comum em servidores
 WantedBy=multi-user.target
 EOF
 
