@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto DevSecOps - Marcos Moreira</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #005792;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h2 {
+            color: #005792;
+}
+        ul {
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: white;
+            margin-top: 20px;
+        }
+        a {
+            color: #005792;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Projeto DevSecOps - Configuração de Servidor Web</h1>
+    </header>
+    <div class="container">
+        <h2>Sobre o Projeto</h2>
+        <p>Este projeto tem como objetivo praticar a configuração de servidores web e automação no ambiente Linux e AWS. A proposta é implementar um servidor Nginx em uma instância EC2, garantindo monitoramento contínuo e notificações em caso de falhas.</p>
+        <h2>Etapas do Projeto</h2>
+        <h3>1. Configuração do Ambiente</h3>
+        <ul>
+            <li>Criar uma VPC na AWS com 2 sub-redes públicas e 2 privadas.</li>
+            <li>Configurar uma instância EC2 com Ubuntu ou Amazon Linux.</li>
+            <li>Associar um Security Group permitindo tráfego HTTP e SSH.</li>
+        </ul>
+
+        <h3>2. Configuração do Servidor Web</h3>
+        <ul>
+            <li>Instalar e configurar o Nginx na instância EC2.</li>
+            <li>Criar uma página HTML para exibição no servidor.</li>
+        </ul>
+
+        <h3>3. Monitoramento e Notificações</h3>
+        <ul>
+            <li>Criar um script para verificar a disponibilidade do site a cada 1 minuto.</li>
+            <li>Registrar logs da execução do script.</li>
+            <li>Enviar notificações para Discord, Telegram ou Slack em caso de falhas.</li>
+        </ul>
+	<h3>4. Testes e Documentação</h3>
+        <ul>
+            <li>Testar o ambiente e validar a configuração.</li>
+            <li>Documentar o processo e disponibilizar no GitHub.</li>
+        </ul>
+
+        <h2>Mais Informações</h2>
+        <p>A documentação completa esta disponível no meu repositório do GitHub. <br> Acesse: <a href="https://github.com/hmindiano/MonitoramentoWeb-DevSecOps-Compass/" target="_blank">GitHub Marcos Moreira</a></p>
+    </div>
+    <footer>
+        <p>Desenvolvido por Marcos Moreira | Estudante de ADS - Fatec Mogi Mirim | Projeto para estágio Compass.UOL</p>
+    </footer>
+</body>
+</html>
