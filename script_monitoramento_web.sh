@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Definição de variáveis
-URL="http://localhost"  # URL do servidor a ser monitorado (modifique se necessário)
-LOG_DIR="/var/log/monitoramento_nginx"  # Diretório para armazenar os logs do monitoramento
+# Definição de variáveis principais
+URL="http://localhost"  # URL do servidor a ser monitorado
+LOG_DIR="/var/log/monitoramento_nginx"  # Diretório para armazenar os logs
 LOG_FILE="$LOG_DIR/status.log"  # Arquivo de log onde os eventos serão registrados
 SERVICE="nginx"  # Nome do serviço a ser monitorado
-DISCORD_WH="COLOQUE_AQUI_O_LINK_DO_WEBHOOK"  # Webhook do Discord para alertas
+DISCORD_WH="DIGITE_AQUI_LINK_WEBHOOK"  # Webhook do Discord para alertas
 CONT=0  # Variável de controle para evitar notificações repetidas
 
 # Definição das mensagens enviadas ao Discord
@@ -28,9 +28,9 @@ send_discord_message() {
 
 # Garante que o diretório de logs exista
 sudo mkdir -p "$LOG_DIR"
+sudo mkdir -p "$LOG_FILE"
+sudo chmod +x "$LOG_FILE"
 
-# Aguarda um tempo inicial antes de iniciar o monitoramento
-sleep 10
 
 # Loop infinito para monitoramento contínuo
 while true; do

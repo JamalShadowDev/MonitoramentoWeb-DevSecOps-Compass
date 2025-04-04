@@ -1,5 +1,5 @@
 [Unit]
-# Descrição do serviço
+# Descrição do serviço: Define o objetivo do serviço de monitoramento do nginx
 Description=Monitoramento do serviço nginx
 
 # Garante que o serviço só inicie após a rede estar disponível
@@ -12,17 +12,12 @@ ExecStart=/usr/bin/monitoramento_nginx/site_onoff.sh
 # Define que o serviço deve ser reiniciado automaticamente caso pare
 Restart=always
 
-# Tempo de espera antes de tentar reiniciar o serviço
-RestartSec=5
+# Define que a saída padrão será registrada no journal do sistema
+StandardOutput=journal
 
-# Define o usuário e grupo sob os quais o serviço será executado
-User=nobody
-Group=nogroup
-
-# Define que a saída padrão e os erros do serviço serão registrados no log especificado
-StandardOutput=append:/var/log/monitoramento_nginx/status.log
-StandardError=append:/var/log/monitoramento_nginx/status.log
+# Define que os erros do serviço serão registrados no journal do sistema
+StandardError=journal
 
 [Install]
-# Garante que o serviço será iniciado no modo multiusuário
+# Garante que o serviço será iniciado no modo multiusuário, o que é comum em servidores
 WantedBy=multi-user.target

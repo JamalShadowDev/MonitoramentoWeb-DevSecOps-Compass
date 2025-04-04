@@ -25,11 +25,9 @@ SCRIPT_FILE="$SCRIPT_DIR/site_onoff.sh"
 
 # Cria o diretório do systemd caso não exista e define permissões
 sudo mkdir -p "$SYSTEMD_DIR"
-sudo chmod +x "$SYSTEMD_DIR"
 
 # Cria o diretório do script caso não exista e define permissões
 sudo mkdir -p "$SCRIPT_DIR"
-sudo chmod +x "$SCRIPT_DIR"
 
 # Cria o script de monitoramento do Nginx
 cat << 'EOF' | sudo tee "$SCRIPT_FILE" > /dev/null
@@ -40,7 +38,7 @@ URL="http://localhost"  # URL do servidor a ser monitorado
 LOG_DIR="/var/log/monitoramento_nginx"  # Diretório para armazenar os logs
 LOG_FILE="$LOG_DIR/status.log"  # Arquivo de log onde os eventos serão registrados
 SERVICE="nginx"  # Nome do serviço a ser monitorado
-DISCORD_WH="https://discord.com/api/webhooks/1354699626762076343/QQO0mqB9zjpyoPZgc_7-UNs3S6y1ZeR7pC0-wtBpD7JwL4KkCCDZpwCxU0oafIoZysoj"  # Webhook do Discord para alertas
+DISCORD_WH="DIGITE_AQUI_LINK_WEBHOOK"  # Webhook do Discord para alertas
 CONT=0  # Variável de controle para evitar notificações repetidas
 
 # Definição das mensagens enviadas ao Discord
@@ -62,13 +60,10 @@ send_discord_message() {
 }
 
 # Garante que o diretório de logs exista
-mkdir -p "$LOG_DIR"
-chmod +x "$LOG_DIR"
-mkdir -p "$LOG_FILE"
-chmod +x "$LOG_FILE"
+sudo mkdir -p "$LOG_DIR"
+sudo mkdir -p "$LOG_FILE"
+sudo chmod +x "$LOG_FILE"
 
-# Aguarda um tempo inicial antes de iniciar o monitoramento
-sleep 10
 
 # Loop infinito para monitoramento contínuo
 while true; do
